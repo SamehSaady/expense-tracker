@@ -1,11 +1,18 @@
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { generateOptions } from "./DropDownList";
+import { Category, categories } from "../App";
+
+interface Props {
+  addProduct: (escription: string, amount: number, category: Category) => void;
+}
 
 const schema = z.object({
   description: z
     .string()
-    .min(3, { message: "Description should be at least 3 characters." }),
+    .min(3, { message: "Description should be at least 3 characters." })
+    .max(50, { message: "Description shouldn't exceed 50 characters." }),
   amount: z
     .number({ invalid_type_error: "Amount is required." })
     .min(1, { message: "Amount must be greater than or equal to 1." }),
@@ -14,17 +21,24 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const Form = () => {
+const Form = ({ addProduct }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FieldValues) => console.log(data);
+  // const onSubmit = (data: FieldValues) =>
+  //   console.log(new Product(data.description, data.amount, data.category));
 
   return (
-    <form onSubmit={handleSubmit((data: FieldValues) => console.log(data))}>
+    <form
+      onSubmit={handleSubmit((data) => {
+        addProduct(data.description, data.amount, data.category as Category);
+        reset();
+      })}
+    >
       <div className="mb-3">
         <label htmlFor="description" className="form-label">
           Description:
@@ -59,24 +73,14 @@ const Form = () => {
         <label htmlFor="category" className="form-label">
           Category:
         </label>
-        <select id="category" className="form-select">
-          <option selected>Groceries</option>
-          <option value="1">Utilities</option>
-          <option value="2">Entertainment</option>
+        <select {...register("category")} id="category" className="form-select">
+          {generateOptions(categories)}
         </select>
       </div>
 
-      <button className="btn btn-primary mb-5" type="submit">
+      <button className="btn btn-primary" type="submit">
         Submit
       </button>
-
-      <div className="mb-3">
-        <select id="filter" title="Filter Categories" className="form-select">
-          <option selected>All Categories</option>
-          <option value="1">Utilities</option>
-          <option value="2">Entertainment</option>
-        </select>
-      </div>
     </form>
   );
 };
