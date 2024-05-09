@@ -3,7 +3,6 @@ import "./App.css";
 import Form from "./components/Form";
 import Table from "./components/Table";
 import Product from "./models/Product";
-import { produce } from "immer";
 import DropDownList from "./components/DropDownList";
 
 export const categories = ["Groceries", "Utilities", "Entertainment"] as const;
@@ -32,11 +31,6 @@ function App() {
   ) => {
     const newProductId =
       products.length === 0 ? 1 : products[products.length - 1].id + 1;
-    // setProducts(
-    //   produce((draft) =>
-    //     draft.push(new Product(newProductId, description, amount, category))
-    //   )
-    // );
 
     setProducts([
       ...products,

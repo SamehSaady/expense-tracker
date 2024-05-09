@@ -25,12 +25,9 @@ const Form = ({ addProduct }: Props) => {
   const {
     register,
     handleSubmit,
-    reset,
+    reset, // Call it onSubmit to reset the input fields (deletes submitted values).
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
-
-  // const onSubmit = (data: FieldValues) =>
-  //   console.log(new Product(data.description, data.amount, data.category));
 
   return (
     <form

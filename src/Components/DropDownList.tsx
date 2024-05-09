@@ -1,6 +1,5 @@
 interface Props {
   items: string[];
-  //   onSelectionChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   onSelectionChange: (selectedItem: string) => void;
 }
 
